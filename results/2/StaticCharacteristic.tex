@@ -1,0 +1,54 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=-1,
+xmax=1,
+xlabel style={font=\color{white!15!black}},
+xlabel={u},
+ymin=-5,
+ymax=1,
+ylabel style={font=\color{white!15!black}},
+ylabel={y},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Charakterystyka statyczna},
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue]
+  table[row sep=crcr]{%
+-1	-4.77474611964746\\
+-0.9	-4.02782696565623\\
+-0.8	-3.3165247188144\\
+-0.7	-2.64832462493377\\
+-0.6	-2.0311205565878\\
+-0.5	-1.47524417994049\\
+-0.4	-0.994481608741377\\
+-0.3	-0.603748034574471\\
+-0.2	-0.312404136181137\\
+-0.1	-0.116953396553903\\
+0	0\\
+0.1	0.0627929140148906\\
+0.2	0.0938410370211354\\
+0.3	0.108929567151662\\
+0.4	0.117156157659976\\
+0.5	0.122954210719789\\
+0.6	0.128147573884066\\
+0.7	0.133334803438627\\
+0.8	0.138643584124982\\
+0.9	0.144081224867224\\
+1	0.149670193432045\\
+};
+\addlegendentry{Charakterystyka statyczna}
+
+\end{axis}
+\end{tikzpicture}%
