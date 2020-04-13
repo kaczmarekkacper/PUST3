@@ -19,8 +19,8 @@ r0 = K*(1+T/(2*Ti)+Td/T);
 
 for i=3:sim_time
     %symulacja
-    if i > 12 % bo wczeœniej nie mo¿na wyliczyæ wyjœcia, a trzeba liczyæ sterowanie
-        y(i) = symulacja_obiektu7Y(u(i-10),u(i-11),y(i-1),y(i-2));
+    if i > 6 % bo wczeœniej nie mo¿na wyliczyæ wyjœcia, a trzeba liczyæ sterowanie
+        y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
     end
     error(i) = yzad(i) - y(i);
     u(i) = r2*error(i-2)+r1*error(i-1)+r0*error(i) + u(i-1);

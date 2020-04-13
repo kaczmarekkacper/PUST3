@@ -11,7 +11,7 @@ global Umax;
 global Ymax;
 global Ymin;
 global T;
-global k; %iloúÊ prÛbek symulacji
+global k; %ilo≈õƒá pr√≥bek symulacji
 
 
 
@@ -19,47 +19,47 @@ Upp = 0;
 Ypp = 0;
 Umin = -1;
 Umax = 1;
-Ymax = 2.721; % wyznaczone eksperymentalnie
-Ymin = 1.279;
+Ymax = 0.149670193432045; % wyznaczone eksperymentalnie
+Ymin = -4.774746119647459;
 T = 0.5;
 k = 250;
 
-figures = 1; % czy wyúwietlaÊ wykresy
-saving = 1; % czy zapisywaÊ dane
+figures = 1; % czy wy≈õwietlaƒá wykresy
+saving = 1; % czy zapisywaƒá dane
 
 %% 1. Sprawdzic poprawnosc wartosci Upp, Ypp.
 
 mkdir('results/1');
 
-y = zeros(k, 1); %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+y = zeros(k, 1); %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
 for i = 3:k
     y(i) = symulacja_obiektu7y(Upp,Upp,y(i-1),y(i-2));
 end
 
-%rysowanie wykresÛw
+%rysowanie wykres√≥w
 if figures
     plotProcess(u, y,'Sprawdzenie punktu pracy');
 end
 
-%zapisanie plikÛw do tex, aby wrzuciÊ wykres w tikz do latex
+%zapisanie plik√≥w do tex, aby wrzuciƒá wykres w tikz do latex
 if saving
     matlab2tikz('results/1/CheckWorkpoint.tex');
 end
 
-%% 2. Wyznaczyc symulacyjnie odpowiedzi skokowe procesu dla kilku zmian sygna≥u sterujacego,
-%     przy uwzglednieniu ograniczen wartosci tego sygna≥u, jego wartosc na poczatku
-%     eksperymentu wynosi Upp. Narysowac te odpowiedzi na jednym rysunku. Narysowac
-%     charakterystyke statyczna procesu y(u). Czy w≥asciwosci statyczne i dynamiczne procesu
-%     sa (w przyblizeniu) liniowe? Jezeli tak, okreslic wzmocnienie statyczne procesu.
+%% 2. Wyznaczyc symulacyjnie odpowiedzi skokowe procesu dla kilku zmian sygna≈Çu sterujacego,
+%     przy uwzglednieniu ograniczen wartosci tego sygna≈Çu, jego wartosc na poczatku
+%     eksperymentu wynosi 0. Narysowac te odpowiedzi na jednym rysunku. Narysowac
+%     charakterystyke statyczna procesu y(u). Czy w≈Çasciwosci statyczne i dynamiczne procesu
+%     sa (w przyblizeniu) liniowe?
 
 mkdir('results/2');
 
 % 2.1 Odpowiedzi skokowe
 
 %Skok z 0 na 1 w chwili 10
-y = ones(k, 1)*Ypp; %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+y = ones(k, 1)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
 u(10:k) = 1;
 for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
@@ -81,8 +81,8 @@ if figures
 end
 
 %Skok z 0 na 0.5 w chwili 10
-y = ones(k, 1)*Ypp; %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+y = ones(k, 1)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
 u(10:k) = 0.5;
 for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
@@ -100,8 +100,8 @@ if figures
 end
 
 %Skok z 0.0 na 0.2 w chwili 10
-y = ones(k, 1)*Ypp; %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+y = ones(k, 1)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
 u(10:k) = 0.2;
 for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
@@ -119,8 +119,8 @@ if figures
 end
 
 %Skok z 0.0 na -0.2 w chwili 10
-y = ones(k, 1)*Ypp; %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+y = ones(k, 1)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
 u(10:k) = -0.2;
 for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
@@ -138,8 +138,8 @@ if figures
 end
 
 %Skok z 0.0 na -0.5 w chwili 10
-y = ones(k, 1)*Ypp; %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+y = ones(k, 1)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
 u(10:k) = -0.5;
 for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
@@ -157,8 +157,8 @@ if figures
 end
 
 %Skok z 0.0 na -1 w chwili 10
-y = ones(k, 1)*Ypp; %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+y = ones(k, 1)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
 u(10:k) = -1;
 for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
@@ -184,15 +184,15 @@ end
 
 %2.2 Charakterystyka statyczna procesu y(u)
 
-% Przygotowanie wektorÛw dla ch. stat. 
+% Przygotowanie wektor√≥w dla ch. stat. 
 ustat = Umin:0.1:Umax;
 ystat = zeros( size(ustat, 1), 1);
 iter = 0;
 
-for uk = ustat % dla kolejnych wartoúci od Umin do Umax symulujemy do stabilizacji i bierzemy y pracy dla danego u pracy
+for uk = ustat % dla kolejnych warto≈õci od Umin do Umax symulujemy do stabilizacji i bierzemy y pracy dla danego u pracy
     iter = iter+1;
-    y = ones(k, 1)*Ypp; %alokacja wektora o d≥ugoúci symulacji
-    u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
+    y = ones(k, 1)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+    u = ones(k,1)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
     u(10:k) = uk;
     for i = 7:k
         y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
@@ -215,128 +215,20 @@ end
 
 
 
-%% 3. Przekszta≥cic jedna z otrzymanych odpowiedzi w taki sposÛb, aby otrzymac odpowiedz
-%     skokowa wykorzystywana w algorytmie DMC, tzn. zestaw liczb s1, s2, . . . (przy skoku
-%     jednostkowym sygna≥u sterujacego: od chwili k = 0 w≥acznie sygna≥ sterujacy ma
-%     wartosc 1, w przesz≥osci jest zerowy). Zamiescic rysunek odpowiedzi skokowej.
-
-tau = 10; %opoznienie
-
-%przygotowanie wektorÛw
-yDMC = ones(k, 1); %alokacja wektora o d≥ugoúci symulacji
-uDMC = ones(k,1); %Sterowanie sta≥e rÛwne punktow pracy
-
-%Skok z 0.8 na 1.5 w chwili 10
-y = ones(k, 1)*2; %alokacja wektora o d≥ugoúci symulacji
-u = ones(k,1)*Upp; %Sterowanie sta≥e rÛwne punktow pracy
-u(10:k) = Umax;
-for i = 12:k
-    y(i) = symulacja_obiektu7Y(u(i-10),u(i-11),y(i-1),y(i-2));
-end
-
-if figures
-    plotProcess(u, y, 'Model DMC przed znormalizowaniem');
-end
-
-if saving
-    matlab2tikz('results/3/DMCBefore.tex');
-end
-
-%sprowadzenie odp skokowej do normy
-yDMC(1:end-tau) = y(tau+1:end); yDMC(end-tau:end) = y(end-tau:end);
-uDMC(1:end-tau) = u(tau+1:end); uDMC(end-tau:end) = u(end-tau:end);
-yDMC = (yDMC-2)/(1.5-0.8);
-uDMC = (uDMC-0.8)/(1.5-0.8);
-
-%wektor odpowiedzi skokowych
-global s;
-s = yDMC;
-
-if figures
-    plotProcess(uDMC, yDMC, 'Model DMC po znormalizowaniu');
-end
-
-if saving
-    matlab2tikz('results/3/DMCAfter.tex');
-end
-
-%% 4. Napisac i omÛwic program w jezyku Matlab do symulacji cyfrowego algorytmu PID
+%% 3. Napisac i om√≥wic program w jezyku MATLAB do symulacji cyfrowego algorytmu PID 
 %     oraz algorytmu DMC (w najprostszej wersji analitycznej) dla symulowanego procesu.
-%     Istniejace ograniczenia wartosci sygna≥u sterujacego oraz ograniczenie szybkosci zmian
-%     tego sygna≥u
-%     -/\Umax <= /\U(k) <= /\Umax
-%     gdzie /\Umax = 0,2, uwzglednic odpowiednio ograniczajac (przycinajac) wyznaczony
-%     przez regulator sygna≥ sterujacy.
+
+%% 4. Dla zaproponowanej trajektorii zmian sygna≈Çu zadanego (kilka skok√≥w o r√≥znej wartosci,   
+%     przyjac mozliwie duze zmiany punktu pracy, wynikajace z charakterystyki statycznej)
+%     dobrac nastawy regulatora PID i parametry algorytmu DMC (dowolna metoda).
+%     Om√≥wic metode doboru nastaw i uzasadnic jej zastosowanie. Jakosc regulacji oceniac
+%     jakosciowo (na podstawie rysunk√≥w przebieg√≥w sygna≈Ç√≥w) oraz ilosciowo, wyznaczajac
+%     wskaznik jakosci regulacji
+%     E = \sum^{k_{konc}}_{k=1} (yzad(k) ‚àí y(k))^2
+%     gdzie k_{konc} oznacza koniec symulacji (zawsze taki sam). Zamiescic wyniki symulacji
+%     oraz wartosci wskaznika jakosci E.
 mkdir('results/4');
-yzad = Ypp+0.1;
-
-%% 4.1 PID
-
-K = 3.583;
-Ti = 1000000;
-Td = 0;
-[u,y] = PID(K, Ti, Td, k, yzad, Upp, Ypp);
-
-%PIDtitle = sprintf('Algorytm PID K = %g Ti = %g Td = %g', K, Ti, Td);
-%PIDtitle = sprintf('Szukanie wzmocnienia statycznego K = %g', K);
-PIDtitle = 'Zbliøenie na oscylacje';
-PIDtitle = strrep(PIDtitle,'.',',');
-if figures
-    plotProcess(u, y, PIDtitle);
-end
-subplot(2,1,1);
-hold on;
-plot(1:k, ones(1,k)*yzad, 'r:');
-legend('Wyjúcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
-%axis([0 2000 1.7 2.2])
-hold off;
-if saving
-    matlab2tikz(sprintf('results//4//%s.tex', PIDtitle));
-end
-%% 4.2 DMC
-
-
-%Paramtery domyúlne
-D = 250;
-N = D;
-Nu = N;
-lambda = 20;
-
-% symulacja DMC
-[u, y] = DMC(s, D, N, Nu, lambda, yzad, k, Upp, Ypp);
-
-DMCtitle = sprintf('Algorytm DMC D = %g N = %g Nu = %g lambda = %g', D, N, Nu, lambda);
-DMCtitle = strrep(DMCtitle,'.',',');
-if figures
-    plotProcess(u, y, DMCtitle);
-end
-subplot(2,1,1);
-hold on;
-plot(1:k, ones(1,k)*yzad, 'r:');
-legend('Wyjúcie procesu', 'WartoúÊ zadana');
-hold off;
-
-if saving
-    matlab2tikz(sprintf('results//4//%s.tex', DMCtitle));
-end
-
-%% 5. Dla zaproponowanej trajektorii zmian sygna≥u zadanego (kilka skokÛw o rÛznej amplitudzie)
-%     dobrac nastawy regulatora PID i parametry algorytmu DMC metoda eksperymentalna.
-%     Jakosc regulacji oceniac jakosciowo (na podstawie rysunkÛw przebiegÛw
-%     sygna≥Ûw) oraz ilosciowo, wyznaczajac wskaznik jakosci regulacji
-%     E = \sum^{k_{konc}}_{k=1} (yzad(k) ? y(k))2
-%     gdzie kkonc oznacza koniec symulacji (zawsze taki sam). Zamiescic wybrane wyniki
-%     symulacji (przebiegi sygna≥Ûw wejsciowych i wyjsciowych procesu oraz wartosci wskaznika E).
-
-mkdir('results/5');
-
-%% Trajektoria zadana
-
-u_traj = zeros(1, 2000);
-y_traj = zeros(1, 2000);
-y_zad_traj = zeros(1, 2000);
-
-rng(19981998); % ustalenie seedu, øeby rand zawsze dawa≥ to samo przy kaødym uruchomieniu
+rng(19981998); % ustalenie seedu, ≈ºeby rand zawsze dawa≈Ç to samo przy ka≈ºdym uruchomieniu
 
 for i = 0:9
     y_zad_traj(1+200*i:200*(i+1)) = Ymin + (Ymax-Ymin)*rand(1);
@@ -351,7 +243,7 @@ ylabel('y');
 end
 
 if saving
-    matlab2tikz('results/5/TrajektoriaZadana.tex');
+    matlab2tikz('results/4/TrajektoriaZadana.tex');
 end
 
 %% PID
@@ -382,12 +274,12 @@ end
 subplot(2,1,1);
 hold on;
 plot(1:k, y_zad_traj, 'r:');
-legend('Wyjúcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
+legend('Wyj≈õcie procesu', 'Warto≈õƒá zadana', 'Location', 'southwest');
 hold off;
 k = 250;
 
 if saving
-    matlab2tikz(sprintf('results//5//%s.tex', PIDtitle));
+    matlab2tikz(sprintf('results//4//%s.tex', PIDtitle));
 end
 
 %% DMC
@@ -419,107 +311,24 @@ end
 subplot(2,1,1);
 hold on;
 plot(1:k, y_zad_traj, 'r:');
-legend('Wyjúcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
+legend('Wyj≈õcie procesu', 'Warto≈õƒá zadana', 'Location', 'southwest');
 hold off;
 k = 250;
 
 if saving
-    matlab2tikz(sprintf('results//5//%s.tex', DMCtitle));
+    matlab2tikz(sprintf('results//4//%s.tex', DMCtitle));
 end
 
-%% 6. Dla zaproponowanej trajektorii zmian sygna≥u zadanego dobrac nastawy regulatora
-%     PID i parametry algorytmu DMC (N, Nu, lambda) w wyniku optymalizacji wskaznika jakosci
-%     regulacji E. OmÛwic dobÛr parametrÛw optymalizacji. Zamiescic wyniki symulacji dla
-%     optymalnych regulatorÛw.
-mkdir('results/6');
+%% 5. W tym samym programie zaimplementowac i om√≥wic rozmyty algorytm PID i rozmyty
+%     algorytm DMC w najprostszej wersji analitycznej. Uzasadnic wyb√≥r zmiennej,
+%     na podstawie kt√≥rej dokonywane jest rozmywanie. Uzasadnic wyb√≥r i kszta≈Çt funkcji
+%     przynaleznosci.
+%% 6. Dobrac parametry kazdego z lokalnych regulator√≥w w taki spos√≥b, aby osiagnac mozliwie
+%     wysoka jakosc regulacji w okolicach jego punktu pracy (przyjac dla DMC lambda = 1).
+%     Wykonac, dla za≈Çozonej trajektorii zmian sygna≈Çu wartosci zadanej, eksperymenty
+%     uwzgledniajac
 
-%% PID
- 
-K0 = 13;
-Ti0 = 3;
-Td0 = 3;
-x0 = [K0,Ti0,Td0]; 
-A = [-1 0 0;
-    0 -1 0;
-    0 0 -1];
-b = [0;
-    0;
-    0];
-PIDOptimalParameters = fmincon(@PIDFunctionToMinimize, x0, A, b); 
-K = PIDOptimalParameters(1); 
-Ti = PIDOptimalParameters(2); 
-Td = PIDOptimalParameters(3);
-
-for i = 0:9
-    yzad = y_zad_traj(1+200*i);
-    if i == 0
-        [u, y] = PID(K, Ti, Td, 200, yzad, Upp, Ypp);
-    else
-        [u, y] = PID(K, Ti, Td, 200, yzad, u_traj(200*i), y_traj(200*i));
-    end
-    u_traj(1+200*i:200*(i+1)) = u;
-    y_traj(1+200*i:200*(i+1)) = y;
-end
-
-E = (y_traj-y_zad_traj)*(y_traj-y_zad_traj)';
-
-PIDtitle = sprintf('Algorytm PID K = %g Ti = %g Td = %g E = %g', K, Ti, Td, E);
-PIDtitle = strrep(PIDtitle,'.',',');
-k = 2000;
-if figures
-    plotProcess(u_traj, y_traj, PIDtitle);
-end
-subplot(2,1,1);
-hold on;
-plot(1:k, y_zad_traj, 'r:');
-legend('Wyjúcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
-hold off;
-k = 250;
-
-if saving
-    matlab2tikz(sprintf('results//6//%s.tex', PIDtitle));
-end
-
-
-%% DMC
-
-A = [-1 1 0 0;
-    0 -1 1 0];
-b = [0;
-    0];
-DMCOptimalParameters = ga(@DMCFunctionToMinimize, 4, A, b, [], [], [140, 1, 1, 10e-5], [250, 250, 250, 1000], [], 1:3);
-D = DMCOptimalParameters(1); 
-N = DMCOptimalParameters(2); 
-Nu = DMCOptimalParameters(3); 
-lambda = DMCOptimalParameters(4);
-
-for i = 0:9
-    yzad = y_zad_traj(1+200*i);
-    if i == 0
-        [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
-    else
-        [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
-    end
-    u_traj(1+200*i:200*(i+1)) = u;
-    y_traj(1+200*i:200*(i+1)) = y;
-end
-
-E = (y_traj-y_zad_traj)*(y_traj-y_zad_traj)';
-
-DMCtitle = sprintf('Algorytm DMC D = %g N = %g Nu = %g lambda = %g  E = %g', D, N, Nu, lambda, E);
-DMCtitle = strrep(DMCtitle,'.',',');
-k = 2000;
-if figures
-    plotProcess(u_traj, y_traj, DMCtitle);
-end
-subplot(2,1,1);
-hold on;
-plot(1:k, y_zad_traj, 'r:');
-legend('Wyjúcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
-hold off;
-k = 250;
-
-if saving
-    matlab2tikz(sprintf('results//6//%s.tex', DMCtitle));
-end
+%% 7. Dla zaproponowanej trajektorii zmian sygna≈Çu zadanego oraz dla r√≥znej liczby regulator√≥w
+%     lokalnych (2, 3, 4, 5, . . . ) spr√≥bowac dobrac parametry lambda dla kazdego z lokalnych
+%      regulator√≥w DMC. Zamiescic wyniki symulacji.
 

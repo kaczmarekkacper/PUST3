@@ -14,11 +14,10 @@ classdef DMCReg < handle
         deltaup % wektor delta Up
         Umin % minimalna wartoœæ sterowania
         Umax % maksymalna wartoœæ sterowniaa
-        Umaxchange % max delta sterownaia
     end
     
     methods
-        function obj = DMCReg(s, D, N, Nu, lambda, Umin, Umax, Umaxchange)
+        function obj = DMCReg(s, D, N, Nu, lambda, Umin, Umax)
             % przypisanie do zmiennych obiektu
             obj.N = N;
             obj.D = D;
@@ -27,7 +26,6 @@ classdef DMCReg < handle
             obj.LAMBDA = eye(Nu)*lambda;
             obj.Umin = Umin;
             obj.Umax = Umax;
-            obj.Umaxchange = Umaxchange;
 
             % Wyznaczanie macierzy M
             obj.M = zeros(N, Nu);
@@ -71,13 +69,6 @@ classdef DMCReg < handle
             
             % wyliczenie wektora zmian sterowania
             deltauk=obj.K*(obj.yzad-y0);
-            
-            %ograniczenie zmian sterowania
-            if deltauk(1) > obj.Umaxchange
-                deltauk(1) = obj.Umaxchange;
-            elseif deltauk(1) < -obj.Umaxchange
-                deltauk(1) =-obj.Umaxchange;
-            end
             
             % prawo regulacji
             u=obj.u_prev+deltauk(1);
