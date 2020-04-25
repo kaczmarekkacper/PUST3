@@ -12,7 +12,10 @@ global Ymax;
 global Ymin;
 global T;
 global k; %ilo≈õƒá pr√≥bek symulacji
-
+global Rmax; 
+global Rmin; 
+global memFun; 
+global Rvar;
 
 
 Upp = 0;
@@ -224,7 +227,7 @@ end
 %     Om√≥wic metode doboru nastaw i uzasadnic jej zastosowanie. Jakosc regulacji oceniac
 %     jakosciowo (na podstawie rysunk√≥w przebieg√≥w sygna≈Ç√≥w) oraz ilosciowo, wyznaczajac
 %     wskaznik jakosci regulacji
-%     E = \sum^{k_{konc}}_{k=1} (yzad(k) ‚àí y(k))^2
+%     E = \sum^{k_{konc}}_{k=1} (yzad(k) ‚?í y(k))^2
 %     gdzie k_{konc} oznacza koniec symulacji (zawsze taki sam). Zamiescic wyniki symulacji
 %     oraz wartosci wskaznika jakosci E.
 mkdir('results/4');
@@ -311,7 +314,7 @@ end
 subplot(2,1,1);
 hold on;
 plot(1:k, y_zad_traj, 'r:');
-legend('Wyj≈õcie procesu', 'Warto≈õƒá zadana', 'Location', 'southwest');
+legend('WyjúÊcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
 hold off;
 k = 250;
 
@@ -323,6 +326,131 @@ end
 %     algorytm DMC w najprostszej wersji analitycznej. Uzasadnic wyb√≥r zmiennej,
 %     na podstawie kt√≥rej dokonywane jest rozmywanie. Uzasadnic wyb√≥r i kszta≈Çt funkcji
 %     przynaleznosci.
+
+% PID 
+%zmienna decyzyjna -  do wyboru u(i-1) oraz y(i)
+Rvar = 'y';
+[Rmax,Rmin] = setRuleCons(Rvar); 
+
+%funkcja przynaleønoúci - do wyboru gbellmf, gaussmf, trimf, trapmf
+memFun = "gbellmf";
+
+nr = 10;  %liczba regulatorow lokalnych/regul
+
+[Klocal,Tilocal,Tdlocal] = PIDsetLocalParams(nr); 
+
+for i = 0:9
+    yzad = y_zad_traj(1+200*i);
+    if i == 0
+         [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, Upp, Ypp);
+    else
+        [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, u_traj(200*i), y_traj(200*i));
+    end
+    u_traj(1+200*i:200*(i+1)) = u;
+    y_traj(1+200*i:200*(i+1)) = y;
+end
+
+PID2title = sprintf('Algorytm distributed');
+%PID2title = strrep(PID2title,'.',',');
+k = 2000;
+if figures
+    plotProcess(u_traj, y_traj, PID2title);
+end
+subplot(2,1,1);
+hold on;
+plot(1:k, y_zad_traj, 'r:');
+legend('Wyjúõcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
+hold off;
+k = 250;
+
+
+
+%% DMC 
+%zmienna decyzyjna - do wyboru u(i-1) oraz y(i)
+Rvar = 'u(i-1)';
+[Rmax,Rmin] = setRuleCons(Rvar); 
+%funkcja przynaleønoúci - do wyboru gbellmf, gaussmf, trimf, trapmf
+memFun = "trimf";
+
+%liczba regulatorÛw lokalnych 
+nr = 6;
+
+%zebranie lokalnych odpowiedzi skokowych 
+tau = 10 ; 
+y = ones(k, nr)*Ypp; %alokacja wektora o d≈Çugo≈õci symulacji
+u = ones(k,nr)*Upp; %Sterowanie sta≈Çe r√≥wne punktow pracy
+yDMC = zeros(k,nr); 
+uDMC = zeros(k,nr); 
+s = zeros(k,nr); 
+
+centerDistance = (Rmax-Rmin)/(nr-1); 
+centers = Rmin : centerDistance : Rmax; 
+figure
+for reg = 1 : nr
+    u(10:k,reg) = centers(reg);
+    for i = 7:k
+        y(i,reg) = symulacja_obiektu7y(u(i-5,reg),u(i-6,reg),y(i-1,reg),y(i-2,reg));
+    end
+    %przeskalowanie 
+    yDMC(1:end-tau,reg) = y(tau+1:end,reg); 
+    yDMC(end-tau:end,reg) = y(end-tau:end,reg);
+    uDMC(1:end-tau,reg) = u(tau+1:end,reg);
+    uDMC(end-tau:end,reg) = u(end-tau:end,reg);
+    if centers(reg) ~= 0
+        s(1:end,reg) = yDMC(1:end,reg)/centers(reg);
+    end
+%     plot(yDMC(1:end,reg))
+%     hold on
+%     plot(uDMC(1:end,reg))
+%     hold on
+%     figure
+    plot(s(1:end,reg))
+    hold on
+    if centers(reg) ~= 0
+        plot(uDMC(1:end,reg)/centers(reg))
+    end
+end
+
+
+D = setD(s);
+N = D;
+Nu = fix(N/3);
+lambda = 1;
+for i = 0:9
+    yzad = y_zad_traj(1+200*i);
+    if i == 0
+        [u, y] = DMC_distributed(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
+    else
+        [u, y] = DMC_distributed(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
+    end
+    u_traj(1+200*i:200*(i+1)) = u;
+    y_traj(1+200*i:200*(i+1)) = y;
+
+% 
+%     k = 200 ;
+%     plotProcess(u,y,sprintf('Skok na %.2f',yzad)); 
+%     subplot(2,1,1);
+%     hold on;
+%     plot(1:k, ones(1,k)*yzad, 'r:');
+end
+
+k = 2000;
+if figures
+    plotProcess(u_traj, y_traj, 'DMC_distributed');
+end
+subplot(2,1,1);
+hold on;
+plot(1:k, y_zad_traj, 'r:');
+legend('WyjúÊcie procesu', 'WartoúÊ zadana', 'Location', 'southwest');
+hold off;
+k = 250;
+
+
+
+
+
+
+
 %% 6. Dobrac parametry kazdego z lokalnych regulator√≥w w taki spos√≥b, aby osiagnac mozliwie
 %     wysoka jakosc regulacji w okolicach jego punktu pracy (przyjac dla DMC lambda = 1).
 %     Wykonac, dla za≈Çozonej trajektorii zmian sygna≈Çu wartosci zadanej, eksperymenty
