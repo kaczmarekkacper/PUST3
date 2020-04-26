@@ -373,7 +373,7 @@ Rvar = 'u(i-1)';
 memFun = "trimf";
 
 %liczba regulatorów lokalnych 
-nr = 6;
+nr = 4;
 
 %zebranie lokalnych odpowiedzi skokowych 
 tau = 10 ; 
