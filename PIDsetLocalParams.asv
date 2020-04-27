@@ -16,6 +16,12 @@ end
 if nregs == 3
     n = 1 ; %centrum: -1
     Klocal(n) = 0.21 ; Tilocal(n) = 5.25; Tdlocal(n) = 1.31 ; 
+    
+%     centrum: 0
+%     skok w sterowaniu z 0 na 0.1, Kkryt = 2.66, Tu = 16 * 0.5s 
+%     Klocal(n) = 1.596 ; Tilocal(n) = 4; Tdlocal(n) = 1 ;     
+%     n = 3 ; %centrum: 1
+%     Klocal(n) = 11 ; Tilocal(n) = 4.5; Tdlocal(n) = 1.125 ; 
 
 	n = 2 ; 
     % centrum -0.35
@@ -29,6 +35,17 @@ if nregs == 3
 end
 
 if nregs == 4 
+%     n = 1 ; %centrum: -1
+%     Klocal(n) = 0.21 ; Tilocal(n) = 5.25; Tdlocal(n) = 1.31 ; 
+%     n = 2 ; %centrum: -0.3333
+%     % skok w sterowaniu z -0.4 na -0.3, Kkryt = 0.6, Tu = 18 * 0.5s 
+%     Klocal(n) = 0.3 ; Tilocal(n) = 5; Tdlocal(n) = 1.2 ; 
+%     n = 3 ; %centrum: 0.3333
+%     % skok w sterowaniu z 0.3 na 0.4, Kkryt = 15.065 , Tu = 18 * 0.5s 
+%     Klocal(n) = 8.5 ; Tilocal(n) = 3; Tdlocal(n) = 0.9 ; 
+%     n = 4 ; %centrum: 1
+%     Klocal(n) = 11 ; Tilocal(n) = 4.5; Tdlocal(n) = 1.125 ; 
+
     n = 1 ; %centrum: -1
     Klocal(n) = 0.21 ; Tilocal(n) = 5.25; Tdlocal(n) = 1.31 ; 
     
@@ -65,7 +82,7 @@ if nregs == 5
     n = 4;
     % centrum 0.2
     %skok w sterowaniu z 0.1 na 0.3, Kkryt = 6.9, Tu = 18 * 0.5s 
-    Klocal(n) =  3; Tilocal(n) = 3; Tdlocal(n) =  1.25; 
+    Klocal(n) =  4; Tilocal(n) = ; Tdlocal(n) =  ; 
     
     n = 5;
     % centrum 0.9

@@ -1,0 +1,20 @@
+K = 8.5; % 0.36
+Ti = 3; %4.5
+Td = 1; %1.125
+sim_time = 500;
+% ustat, ystat - ch-ka statyczna 21 liczb
+yzad = ystat(15);
+y_prev = ystat(14);
+u_prev = ustat(14);
+[u,y] = PID(K,Ti,Td,sim_time, yzad, u_prev, y_prev);
+%Rysowanie
+global k;
+k = sim_time;
+plotProcess(u,y,'');
+subplot(2, 1, 1);
+hold on
+stairs(1:sim_time, yzad*ones(sim_time, 1), 'm');
+hold off;
+
+hLeg = legend('example');
+set(hLeg,'visible','off');
