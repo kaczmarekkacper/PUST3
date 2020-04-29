@@ -11,6 +11,15 @@ function [membership] = MembershipFun(name, xmin,xmax, nregs,x)
 
 global funcall ; %zmienna która warunkuje rysowanie wykresów funkcji przynale¿noœci tylko przy pierwszym wywo³aniu
 
+=======
+range = xmax - xmin; 
+funParams = []; 
+halfDistance = range/(2*(nregs-1)) ;
+centerDistance = range/(nregs-1); 
+membership = zeros(1,nregs); 
+% centers = xmin : centerDistance : xmax; 
+
+>>>>>>> origin/Krzychu
 if(nregs == 2)
     centers = [-1;1];
 elseif( nregs == 3)
@@ -22,6 +31,7 @@ elseif(nregs == 5)
 end
 
 if strcmp(name,"gbellmf")
+<<<<<<< HEAD
         if funcall == 0
              figure ;
              title(sprintf('Funkcje przynale¿noœci dla %d regulatorów lokalnych',nregs));
@@ -117,9 +127,7 @@ if strcmp(name,"gbellmf")
                 membership(reg) = evalmf(mf,x); 
             end
         end
-else 
-
-    if strcmp (name,"gaussmf")
+elseif strcmp (name,"gaussmf")
         for reg = 1 : nregs 
             if reg < nregs 
                 funParams = [(centers(reg+1)-centers(reg))/2,centers(reg)]; 
@@ -157,9 +165,7 @@ else
                 else
                     funParams = [centers(reg-1),centers(reg),centers(reg)+1];
                 end
-                
-%          
-%                 funParams = [centers(reg)-centerDistance,centers(reg),centers(reg)+centerDistance]; 
+>>>>>>> origin/Krzychu
                 mf = fismf(name,funParams); 
                 if funcall == 0
                    if reg == 1 
@@ -177,7 +183,6 @@ else
                 membership(reg) = evalmf(mf,x); 
             end
         else
-
             if strcmp (name,"trapmf")
                 for reg = 1 : nregs 
                     if reg < nregs 
@@ -210,13 +215,15 @@ else
                     membership(reg) = evalmf(mf,x); 
                 end
             end
-        end
-        
+        end  
     end
 end
 
+<<<<<<< HEAD
 
 
 end
 
+=======
+>>>>>>> origin/Krzychu
 

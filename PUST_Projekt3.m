@@ -236,7 +236,6 @@ end
 %     oraz wartosci wskaznika jakosci E.
 mkdir('results/4');
 rng(19981998); % ustalenie seedu, Å¼eby rand zawsze dawaÅ‚ to samo przy kaÅ¼dym uruchomieniu
-
 for i = 0:9
     y_zad_traj(1+200*i:200*(i+1)) = Ymin + (Ymax-Ymin)*rand(1);
 end
@@ -291,40 +290,40 @@ end
 
 %% DMC
 
-D = 140;
-N = 45;
-Nu = 4;
-lambda = 20;
-
-for i = 0:9
-    yzad = y_zad_traj(1+200*i);
-    if i == 0
-        [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
-    else
-        [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
-    end
-    u_traj(1+200*i:200*(i+1)) = u;
-    y_traj(1+200*i:200*(i+1)) = y;
-end
-
-E = (y_traj-y_zad_traj)*(y_traj-y_zad_traj)';
-
-DMCtitle = sprintf('Algorytm DMC D = %g N = %g Nu = %g lambda = %g  E = %g', D, N, Nu, lambda, E);
-DMCtitle = strrep(DMCtitle,'.',',');
-k = 2000;
-if figures
-    plotProcess(u_traj, y_traj, DMCtitle);
-end
-subplot(2,1,1);
-hold on;
-plot(1:k, y_zad_traj, 'r:');
-legend('Wyjœæcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
-hold off;
-k = 250;
-
-if saving
-    matlab2tikz(sprintf('results//4//%s.tex', DMCtitle));
-end
+% D = 140;
+% N = 45;
+% Nu = 4;
+% lambda = 20;
+% 
+% for i = 0:9
+%     yzad = y_zad_traj(1+200*i);
+%     if i == 0
+%         [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
+%     else
+%         [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
+%     end
+%     u_traj(1+200*i:200*(i+1)) = u;
+%     y_traj(1+200*i:200*(i+1)) = y;
+% end
+% 
+% E = (y_traj-y_zad_traj)*(y_traj-y_zad_traj)';
+% 
+% DMCtitle = sprintf('Algorytm DMC D = %g N = %g Nu = %g lambda = %g  E = %g', D, N, Nu, lambda, E);
+% DMCtitle = strrep(DMCtitle,'.',',');
+% k = 2000;
+% if figures
+%     plotProcess(u_traj, y_traj, DMCtitle);
+% end
+% subplot(2,1,1);
+% hold on;
+% plot(1:k, y_zad_traj, 'r:');
+% legend('Wyjœæcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
+% hold off;
+% k = 250;
+% 
+% if saving
+%     matlab2tikz(sprintf('results//4//%s.tex', DMCtitle));
+% end
 
 %% 5. W tym samym programie zaimplementowac i omÃ³wic rozmyty algorytm PID i rozmyty
 %     algorytm DMC w najprostszej wersji analitycznej. Uzasadnic wybÃ³r zmiennej,
@@ -333,44 +332,57 @@ end
 
 % PID 
 %zmienna decyzyjna -  do wyboru u(i-1) oraz y(i)
+<<<<<<< HEAD
 Rvar = 'u(i-1)';
+=======
+Rvar = 'y(i)';
+>>>>>>> origin/Krzychu
 [Rmax,Rmin] = setRuleCons(Rvar); 
 
 %funkcja przynale¿noœci - do wyboru gbellmf, gaussmf, trimf, trapmf
 memFun = "gbellmf";
-
-nr = 10;  %liczba regulatorow lokalnych/regul
-
+nr = 5;  %liczba regulatorow lokalnych/regul
+saving = 0;
 [Klocal,Tilocal,Tdlocal] = PIDsetLocalParams(nr); 
 
+E = 0;
 for i = 0:9
     yzad = y_zad_traj(1+200*i);
     if i == 0
-         [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, Upp, Ypp);
+         [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, Upp, Ypp, memFun);
     else
-        [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, u_traj(200*i), y_traj(200*i));
+        [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, u_traj(200*i), y_traj(200*i), memFun);
     end
     u_traj(1+200*i:200*(i+1)) = u;
     y_traj(1+200*i:200*(i+1)) = y;
+    
+    E = E + sum((yzad * ones(200, 1) - y').^2);
 end
 
-PID2title = sprintf('Algorytm distributed');
-%PID2title = strrep(PID2title,'.',',');
+PID2title = sprintf('PID dla %d regulatorów lokalnych i funkcji przynale¿noœci %s E = %.2f', nr, memFun, E);
+PID2title = strrep(PID2title,'.',',');
+savName = sprintf('%d_pid_fun_%s', nr, memFun);
+savName = strrep(savName,'.',',');
 k = 2000;
 if figures
     plotProcess(u_traj, y_traj, PID2title);
 end
+
 subplot(2,1,1);
 hold on;
 plot(1:k, y_zad_traj, 'r:');
-legend('Wyjœ›cie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
+legend('Wyjœcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
 hold off;
 k = 250;
+if saving
+    matlab2tikz(sprintf('results//6//%s.tex', savName));
+end
 
 
 
 %% DMC 
 %zmienna decyzyjna - do wyboru u(i-1) oraz y(i)
+<<<<<<< HEAD
 Rvar = 'u(i-1)';
 %ustawienie zakresu wartoœci zmiennej decyzyjnej
 [Rmax,Rmin] = setRuleCons(Rvar); 
@@ -380,6 +392,89 @@ memFun = "gbellmf";
 %w funkcji wykonywany jest algorytm rozproszonego regulatora DMC
 %argumenty: liczba regulatorów, parametr lambda
 testDMC(2,1)
+=======
+% Rvar = 'u(i-1)';
+% [Rmax,Rmin] = setRuleCons(Rvar); 
+% %funkcja przynale¿noœci - do wyboru gbellmf, gaussmf, trimf, trapmf
+% memFun = "trimf";
+% 
+% %liczba regulatorów lokalnych 
+% nr = 4;
+% 
+% %zebranie lokalnych odpowiedzi skokowych 
+% tau = 10 ; 
+% y = ones(k, nr)*Ypp; %alokacja wektora o dÅ‚ugoÅ›ci symulacji
+% u = ones(k,nr)*Upp; %Sterowanie staÅ‚e rÃ³wne punktow pracy
+% yDMC = zeros(k,nr); 
+% uDMC = zeros(k,nr); 
+% s = zeros(k,nr); 
+% 
+% centerDistance = (Rmax-Rmin)/(nr-1); 
+% centers = Rmin : centerDistance : Rmax; 
+% figure
+% for reg = 1 : nr
+%     u(10:k,reg) = centers(reg);
+%     for i = 7:k
+%         y(i,reg) = symulacja_obiektu7y(u(i-5,reg),u(i-6,reg),y(i-1,reg),y(i-2,reg));
+%     end
+%     %przeskalowanie 
+%     yDMC(1:end-tau,reg) = y(tau+1:end,reg); 
+%     yDMC(end-tau:end,reg) = y(end-tau:end,reg);
+%     uDMC(1:end-tau,reg) = u(tau+1:end,reg);
+%     uDMC(end-tau:end,reg) = u(end-tau:end,reg);
+%     if centers(reg) ~= 0
+%         s(1:end,reg) = yDMC(1:end,reg)/centers(reg);
+%     end
+% %     plot(yDMC(1:end,reg))
+% %     hold on
+% %     plot(uDMC(1:end,reg))
+% %     hold on
+% %     figure
+%     plot(s(1:end,reg))
+%     hold on
+%     if centers(reg) ~= 0
+%         plot(uDMC(1:end,reg)/centers(reg))
+%     end
+% end
+% 
+% 
+% D = setD(s);
+% N = D;
+% Nu = fix(N/3);
+% lambda = 1;
+% for i = 0:9
+%     yzad = y_zad_traj(1+200*i);
+%     if i == 0
+%         [u, y] = DMC_distributed(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
+%     else
+%         [u, y] = DMC_distributed(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
+%     end
+%     u_traj(1+200*i:200*(i+1)) = u;
+%     y_traj(1+200*i:200*(i+1)) = y;
+% 
+% % 
+% %     k = 200 ;
+% %     plotProcess(u,y,sprintf('Skok na %.2f',yzad)); 
+% %     subplot(2,1,1);
+% %     hold on;
+% %     plot(1:k, ones(1,k)*yzad, 'r:');
+% end
+% 
+% k = 2000;
+% if figures
+%     plotProcess(u_traj, y_traj, 'DMC_distributed');
+% end
+% subplot(2,1,1);
+% hold on;
+% plot(1:k, y_zad_traj, 'r:');
+% legend('Wyjœæcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
+% hold off;
+% k = 250;
+% 
+% 
+% 
+% 
+>>>>>>> origin/Krzychu
 
 
 
