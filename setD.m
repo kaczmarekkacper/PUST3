@@ -9,6 +9,5 @@ for i  = 1 : length(s(1,1:end))
         end
     end
 end
-D
 end
 

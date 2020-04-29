@@ -11,11 +11,15 @@ global Umax;
 global Ymax;
 global Ymin;
 global T;
-global k; %ilo艣膰 pr贸bek symulacji
+global k; 
+%zmienna decyzyjna, prze彻czaj筩a regulatory
+global Rvar;
+%zakres warto渃i zmiennej decyzyjnej
 global Rmax; 
 global Rmin; 
+%funkcja przynale縩o渃i
 global memFun; 
-global Rvar;
+
 
 
 Upp = 0;
@@ -329,7 +333,7 @@ end
 
 % PID 
 %zmienna decyzyjna -  do wyboru u(i-1) oraz y(i)
-Rvar = 'y';
+Rvar = 'u(i-1)';
 [Rmax,Rmin] = setRuleCons(Rvar); 
 
 %funkcja przynale縩o渃i - do wyboru gbellmf, gaussmf, trimf, trapmf
@@ -368,86 +372,14 @@ k = 250;
 %% DMC 
 %zmienna decyzyjna - do wyboru u(i-1) oraz y(i)
 Rvar = 'u(i-1)';
+%ustawienie zakresu warto渃i zmiennej decyzyjnej
 [Rmax,Rmin] = setRuleCons(Rvar); 
 %funkcja przynale縩o渃i - do wyboru gbellmf, gaussmf, trimf, trapmf
-memFun = "trimf";
+memFun = "gbellmf";
 
-%liczba regulator體 lokalnych 
-nr = 4;
-
-%zebranie lokalnych odpowiedzi skokowych 
-tau = 10 ; 
-y = ones(k, nr)*Ypp; %alokacja wektora o d艂ugo艣ci symulacji
-u = ones(k,nr)*Upp; %Sterowanie sta艂e r贸wne punktow pracy
-yDMC = zeros(k,nr); 
-uDMC = zeros(k,nr); 
-s = zeros(k,nr); 
-
-centerDistance = (Rmax-Rmin)/(nr-1); 
-centers = Rmin : centerDistance : Rmax; 
-figure
-for reg = 1 : nr
-    u(10:k,reg) = centers(reg);
-    for i = 7:k
-        y(i,reg) = symulacja_obiektu7y(u(i-5,reg),u(i-6,reg),y(i-1,reg),y(i-2,reg));
-    end
-    %przeskalowanie 
-    yDMC(1:end-tau,reg) = y(tau+1:end,reg); 
-    yDMC(end-tau:end,reg) = y(end-tau:end,reg);
-    uDMC(1:end-tau,reg) = u(tau+1:end,reg);
-    uDMC(end-tau:end,reg) = u(end-tau:end,reg);
-    if centers(reg) ~= 0
-        s(1:end,reg) = yDMC(1:end,reg)/centers(reg);
-    end
-%     plot(yDMC(1:end,reg))
-%     hold on
-%     plot(uDMC(1:end,reg))
-%     hold on
-%     figure
-    plot(s(1:end,reg))
-    hold on
-    if centers(reg) ~= 0
-        plot(uDMC(1:end,reg)/centers(reg))
-    end
-end
-
-
-D = setD(s);
-N = D;
-Nu = fix(N/3);
-lambda = 1;
-for i = 0:9
-    yzad = y_zad_traj(1+200*i);
-    if i == 0
-        [u, y] = DMC_distributed(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
-    else
-        [u, y] = DMC_distributed(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
-    end
-    u_traj(1+200*i:200*(i+1)) = u;
-    y_traj(1+200*i:200*(i+1)) = y;
-
-% 
-%     k = 200 ;
-%     plotProcess(u,y,sprintf('Skok na %.2f',yzad)); 
-%     subplot(2,1,1);
-%     hold on;
-%     plot(1:k, ones(1,k)*yzad, 'r:');
-end
-
-k = 2000;
-if figures
-    plotProcess(u_traj, y_traj, 'DMC_distributed');
-end
-subplot(2,1,1);
-hold on;
-plot(1:k, y_zad_traj, 'r:');
-legend('Wyj滄cie procesu', 'Warto滄 zadana', 'Location', 'southwest');
-hold off;
-k = 250;
-
-
-
-
+%w funkcji wykonywany jest algorytm rozproszonego regulatora DMC
+%argumenty: liczba regulator體, parametr lambda
+testDMC(2,1)
 
 
 
@@ -456,7 +388,18 @@ k = 250;
 %     Wykonac, dla za艂ozonej trajektorii zmian sygna艂u wartosci zadanej, eksperymenty
 %     uwzgledniajac
 
+for nregs = 2 : 10 
+    testDMC(nergs,1);
+end
+
 %% 7. Dla zaproponowanej trajektorii zmian sygna艂u zadanego oraz dla r贸znej liczby regulator贸w
 %     lokalnych (2, 3, 4, 5, . . . ) spr贸bowac dobrac parametry lambda dla kazdego z lokalnych
 %      regulator贸w DMC. Zamiescic wyniki symulacji.
+
+
+for lambda1  = [5,8,12,16,20]
+    for lambda2 = [6,10,14,18,25] 
+    testDMC(2,[lambda1,lambda2]);
+    end
+end
 
