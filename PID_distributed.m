@@ -1,4 +1,4 @@
-function [u,y] = PID_distributed(K, Ti, Td, sim_time, y_zad, u_prev, y_prev)
+function [u,y] = PID_distributed(K, Ti, Td, sim_time, y_zad, u_prev, y_prev, name_)
 
 % Definicja sta³ych
 global T;
@@ -15,7 +15,7 @@ u = ones(1,sim_time)*u_prev;
 sumU = 0 ; 
 error = zeros(1,sim_time);
 w = zeros(1,length(K));
-name = "gbellmf";
+name = name_;
 %przeliczanie dla Pida
 r2 = K.*Td./T;
 r1 = K.*(T./(2.*Ti)-2.*Td./T-1); 

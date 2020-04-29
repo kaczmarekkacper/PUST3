@@ -333,34 +333,42 @@ Rvar = 'y(i)';
 
 %funkcja przynale¿noœci - do wyboru gbellmf, gaussmf, trimf, trapmf
 memFun = "gbellmf";
-%kuuuuuuurna nie 10
-nr = 2;  %liczba regulatorow lokalnych/regul
-
+nr = 5;  %liczba regulatorow lokalnych/regul
+saving = 0;
 [Klocal,Tilocal,Tdlocal] = PIDsetLocalParams(nr); 
 
+E = 0;
 for i = 0:9
     yzad = y_zad_traj(1+200*i);
     if i == 0
-         [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, Upp, Ypp);
+         [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, Upp, Ypp, memFun);
     else
-        [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, u_traj(200*i), y_traj(200*i));
+        [u, y] = PID_distributed(Klocal, Tilocal, Tdlocal, 200, yzad, u_traj(200*i), y_traj(200*i), memFun);
     end
     u_traj(1+200*i:200*(i+1)) = u;
     y_traj(1+200*i:200*(i+1)) = y;
+    
+    E = E + sum((yzad * ones(200, 1) - y').^2);
 end
 
-PID2title = sprintf('Algorytm distributed');
-%PID2title = strrep(PID2title,'.',',');
+PID2title = sprintf('PID dla %d regulatorów lokalnych i funkcji przynale¿noœci %s E = %.2f', nr, memFun, E);
+PID2title = strrep(PID2title,'.',',');
+savName = sprintf('%d_pid_fun_%s', nr, memFun);
+savName = strrep(savName,'.',',');
 k = 2000;
 if figures
     plotProcess(u_traj, y_traj, PID2title);
 end
+
 subplot(2,1,1);
 hold on;
 plot(1:k, y_zad_traj, 'r:');
 legend('Wyjœcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
 hold off;
 k = 250;
+if saving
+    matlab2tikz(sprintf('results//6//%s.tex', savName));
+end
 
 
 
