@@ -72,6 +72,7 @@ for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
 end
 
+
 if figures
     figure;
     subplot(2, 1, 1);
@@ -170,6 +171,10 @@ u(10:k) = -1;
 for i = 7:k
     y(i) = symulacja_obiektu7y(u(i-5),u(i-6),y(i-1),y(i-2));
 end
+tau = 10;
+yDMC = zeros(k,1);
+yDMC(1:end-tau) = y(tau+1:end); yDMC(end-tau:end) = y(end-tau:end);
+s = yDMC*(-1);
 
 if figures
     subplot(2, 1, 1);
@@ -254,9 +259,9 @@ end
 
 %% PID
 
-K = 14.36;
-Ti = 4.99;
-Td = 3.54;
+K = 0.22;%0.2
+Ti = 4.4;%5
+Td = 0.24;%0.25
 
 for i = 0:9
     yzad = y_zad_traj(1+200*i);
@@ -280,7 +285,7 @@ end
 subplot(2,1,1);
 hold on;
 plot(1:k, y_zad_traj, 'r:');
-legend('WyjÅ›cie procesu', 'WartoÅ›Ä‡ zadana', 'Location', 'southwest');
+legend('Wyjœcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
 hold off;
 k = 250;
 
@@ -290,40 +295,40 @@ end
 
 %% DMC
 
-% D = 140;
-% N = 45;
-% Nu = 4;
-% lambda = 20;
-% 
-% for i = 0:9
-%     yzad = y_zad_traj(1+200*i);
-%     if i == 0
-%         [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
-%     else
-%         [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
-%     end
-%     u_traj(1+200*i:200*(i+1)) = u;
-%     y_traj(1+200*i:200*(i+1)) = y;
-% end
-% 
-% E = (y_traj-y_zad_traj)*(y_traj-y_zad_traj)';
-% 
-% DMCtitle = sprintf('Algorytm DMC D = %g N = %g Nu = %g lambda = %g  E = %g', D, N, Nu, lambda, E);
-% DMCtitle = strrep(DMCtitle,'.',',');
-% k = 2000;
-% if figures
-%     plotProcess(u_traj, y_traj, DMCtitle);
-% end
-% subplot(2,1,1);
-% hold on;
-% plot(1:k, y_zad_traj, 'r:');
-% legend('Wyjœæcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
-% hold off;
-% k = 250;
-% 
-% if saving
-%     matlab2tikz(sprintf('results//4//%s.tex', DMCtitle));
-% end
+D = 80;
+N = 20;
+Nu = 1;
+lambda = 20;
+
+for i = 0:9
+    yzad = y_zad_traj(1+200*i);
+    if i == 0
+        [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, Upp,Ypp);
+    else
+        [u, y] = DMC(s, D, N, Nu, lambda, yzad, 200, u_traj(200*i), y_traj(200*i));
+    end
+    u_traj(1+200*i:200*(i+1)) = u;
+    y_traj(1+200*i:200*(i+1)) = y;
+end
+
+E = (y_traj-y_zad_traj)*(y_traj-y_zad_traj)';
+
+DMCtitle = sprintf('Algorytm DMC D = %g N = %g Nu = %g lambda = %g  E = %g', D, N, Nu, lambda, E);
+DMCtitle = strrep(DMCtitle,'.',',');
+k = 2000;
+if figures
+    plotProcess(u_traj, y_traj, DMCtitle);
+end
+subplot(2,1,1);
+hold on;
+plot(1:k, y_zad_traj, 'r:');
+legend('Wyjœcie procesu', 'Wartoœæ zadana', 'Location', 'southwest');
+hold off;
+k = 250;
+
+if saving
+    matlab2tikz(sprintf('results//4//%s.tex', DMCtitle));
+end
 
 %% 5. W tym samym programie zaimplementowac i omÃ³wic rozmyty algorytm PID i rozmyty
 %     algorytm DMC w najprostszej wersji analitycznej. Uzasadnic wybÃ³r zmiennej,
